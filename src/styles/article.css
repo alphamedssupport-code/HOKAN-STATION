@@ -1,0 +1,197 @@
+/* ============================================
+   HOKAN STATION - 記事本文スタイル
+============================================ */
+
+.article-body {
+  font-size: 1rem;
+  line-height: 2;
+  color: #374151;
+}
+
+/* ---- 段落 ---- */
+.article-body p {
+  margin: 1.4em 0;
+}
+
+/* ---- H2 見出し ---- */
+.article-body h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0c4a6e;
+  margin: 2.8em 0 0.9em;
+  padding: 0.6em 1em;
+  background: linear-gradient(to right, #e0f2fe, #f0f9ff);
+  border-left: 5px solid #0ea5e9;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.5;
+}
+
+/* ---- H3 見出し ---- */
+.article-body h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 2em 0 0.6em;
+  padding: 0.4em 0.9em;
+  border-left: 4px solid #10b981;
+  background-color: #f0fdf4;
+  border-radius: 0 6px 6px 0;
+  line-height: 1.5;
+}
+
+/* ---- H4 見出し ---- */
+.article-body h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #374151;
+  margin: 1.6em 0 0.5em;
+  padding-left: 0.7em;
+  border-left: 3px solid #94a3b8;
+}
+
+/* ---- 太字 ---- */
+.article-body strong {
+  font-weight: 700;
+  color: #111827;
+  background-color: #fef08a;
+  padding: 0 3px;
+  border-radius: 3px;
+}
+
+/* ---- リンク ---- */
+.article-body a {
+  color: #0284c7;
+  text-decoration: underline;
+  text-decoration-color: #bae6fd;
+  text-underline-offset: 3px;
+}
+.article-body a:hover {
+  color: #075985;
+  text-decoration-color: #0284c7;
+}
+
+/* ---- 箇条書き（ul） ---- */
+.article-body ul {
+  margin: 1.2em 0;
+  padding: 0;
+  list-style: none;
+}
+.article-body ul li {
+  position: relative;
+  padding: 0.3em 0 0.3em 1.8em;
+  border-bottom: 1px dashed #e5e7eb;
+}
+.article-body ul li:last-child {
+  border-bottom: none;
+}
+.article-body ul li::before {
+  content: "▶";
+  position: absolute;
+  left: 0.3em;
+  top: 0.4em;
+  font-size: 0.55rem;
+  color: #0ea5e9;
+}
+
+/* ---- 番号リスト（ol） ---- */
+.article-body ol {
+  margin: 1.2em 0;
+  padding-left: 1.6em;
+}
+.article-body ol li {
+  padding: 0.2em 0 0.2em 0.4em;
+}
+.article-body ol li::marker {
+  color: #0369a1;
+  font-weight: 700;
+}
+
+/* ---- 引用（blockquote） ---- */
+.article-body blockquote {
+  margin: 1.6em 0;
+  padding: 1em 1.2em;
+  background-color: #f0fdf4;
+  border-left: 5px solid #10b981;
+  border-radius: 0 10px 10px 0;
+  color: #374151;
+  font-style: normal;
+}
+.article-body blockquote p {
+  margin: 0;
+}
+
+/* ---- テーブル ---- */
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.8em 0;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+.article-body thead tr {
+  background: linear-gradient(135deg, #0369a1, #0ea5e9);
+  color: #fff;
+}
+.article-body thead th {
+  padding: 0.75em 1.1em;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+}
+.article-body tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.15s;
+}
+.article-body tbody tr:nth-child(even) {
+  background-color: #f0f9ff;
+}
+.article-body tbody tr:hover {
+  background-color: #e0f2fe;
+}
+.article-body tbody td {
+  padding: 0.7em 1.1em;
+  vertical-align: top;
+  line-height: 1.7;
+}
+.article-body tbody td:first-child {
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* ---- インラインコード ---- */
+.article-body code {
+  background-color: #f1f5f9;
+  color: #be185d;
+  padding: 0.15em 0.45em;
+  border-radius: 4px;
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+/* ---- コードブロック ---- */
+.article-body pre {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  padding: 1.2em 1.5em;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: 1.6em 0;
+}
+.article-body pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ---- 水平線 ---- */
+.article-body hr {
+  border: none;
+  border-top: 2px dashed #e2e8f0;
+  margin: 2.5em 0;
+}

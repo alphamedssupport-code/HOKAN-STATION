@@ -1,0 +1,48 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  publishDate: Date;
+  category: string;
+  tags: string[];
+  slug: string;
+}
+
+const { title, description, publishDate, category, tags, slug } = Astro.props;
+
+const formattedDate = publishDate.toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
+  <a href={`/blog/${slug}/`} class="block p-6">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="inline-block bg-primary-100 text-primary-700 text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0">
+            {category}
+          </span>
+          <time datetime={publishDate.toISOString()} class="text-xs text-gray-400">
+            {formattedDate}
+          </time>
+        </div>
+        <h2 class="text-base md:text-lg font-bold text-gray-900 group-hover:text-primary-700 transition-colors leading-snug line-clamp-2 mb-2">
+          {title}
+        </h2>
+        <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+          {description}
+        </p>
+      </div>
+    </div>
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-1 mt-3">
+        {tags.slice(0, 3).map((tag) => (
+          <span class="text-xs text-gray-400">#{tag}</span>
+        ))}
+      </div>
+    )}
+  </a>
+</article>

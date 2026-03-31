@@ -1,0 +1,23 @@
+---
+export interface Props {
+  category: string;
+  title: string;
+}
+const { category, title } = Astro.props;
+---
+
+<nav aria-label="パンくずリスト" class="text-sm text-gray-500">
+  <ol class="flex items-center flex-wrap gap-1">
+    <li>
+      <a href="/" class="hover:text-primary-600 transition-colors">ホーム</a>
+    </li>
+    <li class="before:content-['>'] before:mx-1 before:text-gray-400">
+      <a href={`/category/${category}/`} class="hover:text-primary-600 transition-colors">
+        {category}
+      </a>
+    </li>
+    <li class="before:content-['>'] before:mx-1 before:text-gray-400 text-gray-700 line-clamp-1">
+      {title}
+    </li>
+  </ol>
+</nav>

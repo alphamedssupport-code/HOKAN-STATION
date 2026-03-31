@@ -1,0 +1,102 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonicalURL?: string;
+  ogImage?: string;
+  publishDate?: Date;
+  type?: 'website' | 'article';
+  author?: string;
+  tags?: string[];
+}
+
+const {
+  title,
+  description,
+  canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  ogImage = '/og-default.png',
+  publishDate,
+  type = 'website',
+  author = 'HOKAN STATION編集部',
+  tags = [],
+} = Astro.props;
+
+const siteName = 'HOKAN STATION';
+const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
+const ogImageURL = new URL(ogImage, Astro.site).href;
+
+const jsonLd = type === 'article'
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      author: {
+        '@type': 'Organization',
+        name: author,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: siteName,
+        url: Astro.site?.href,
+      },
+      datePublished: publishDate?.toISOString(),
+      keywords: tags.join(', '),
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': canonicalURL,
+      },
+    })
+  : JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteName,
+      url: Astro.site?.href,
+      description: '訪問看護に関する専門情報メディア',
+    });
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- OGP -->
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:locale" content="ja_JP" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts (Noto Sans JP) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={jsonLd} />
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-800 min-h-screen flex flex-col">
+    <slot />
+  </body>
+</html>

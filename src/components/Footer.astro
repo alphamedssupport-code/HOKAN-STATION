@@ -1,0 +1,56 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-gray-800 text-gray-300 mt-16">
+  <div class="max-w-6xl mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- About -->
+      <div>
+        <h3 class="text-white font-bold mb-3">HOKAN STATION</h3>
+        <p class="text-sm leading-relaxed">
+          訪問看護に関わるすべての人へ。看護師・ケアマネ・ご家族・患者さんに役立つ専門情報を毎日発信しています。
+        </p>
+      </div>
+
+      <!-- Categories -->
+      <div>
+        <h3 class="text-white font-bold mb-3">カテゴリ</h3>
+        <ul class="space-y-1 text-sm">
+          {[
+            '基礎知識',
+            '疾患別ケア',
+            '家族向け',
+            '制度・保険',
+            'キャリア',
+            '医療技術',
+          ].map((cat) => (
+            <li>
+              <a
+                href={`/category/${cat}/`}
+                class="hover:text-white transition-colors"
+              >
+                {cat}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <h3 class="text-white font-bold mb-3">サイト情報</h3>
+        <ul class="space-y-1 text-sm">
+          <li><a href="/about/" class="hover:text-white transition-colors">このサイトについて</a></li>
+          <li><a href="/privacy/" class="hover:text-white transition-colors">プライバシーポリシー</a></li>
+          <li><a href="/sitemap-index.xml" class="hover:text-white transition-colors">サイトマップ</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-700 mt-8 pt-6 text-sm text-center text-gray-500">
+      <p>© {currentYear} HOKAN STATION. All rights reserved.</p>
+      <p class="mt-1 text-xs">本サイトの情報は医療アドバイスに代わるものではありません。実際の医療行為については医師・専門家にご相談ください。</p>
+    </div>
+  </div>
+</footer>

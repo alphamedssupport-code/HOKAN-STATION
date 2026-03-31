@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="このサイトについて | HOKAN STATION"
+  description="HOKAN STATIONは、訪問看護に関わるすべての方へ専門情報を提供する日本語メディアです。"
+>
+  <Header />
+
+  <main class="flex-1 max-w-3xl mx-auto px-4 py-10">
+    <article class="bg-white rounded-xl shadow-sm p-8">
+      <h1 class="text-2xl font-bold mb-6">HOKAN STATIONについて</h1>
+
+      <div class="prose prose-lg max-w-none">
+        <p>
+          <strong>HOKAN STATION</strong>（ほかんステーション）は、訪問看護に関わるすべての方に向けた専門情報メディアです。
+        </p>
+
+        <h2>対象読者</h2>
+        <ul>
+          <li>訪問看護師・准看護師</li>
+          <li>ケアマネジャー</li>
+          <li>在宅療養されているご本人・ご家族</li>
+          <li>訪問看護事業所の管理者・経営者</li>
+          <li>医療・介護の学生や就職を検討している方</li>
+        </ul>
+
+        <h2>掲載コンテンツ</h2>
+        <ul>
+          <li><strong>基礎知識</strong>：訪問看護の仕組み・役割・利用方法</li>
+          <li><strong>疾患別ケア</strong>：在宅がん・ALS・認知症・脳卒中後遺症など</li>
+          <li><strong>家族向け</strong>：介護負担軽減・相談窓口・ケアの実践</li>
+          <li><strong>制度・保険</strong>：医療保険・介護保険の使い方・費用</li>
+          <li><strong>キャリア</strong>：転職・給与・資格・スキルアップ</li>
+          <li><strong>医療技術</strong>：胃ろう・ストーマ・人工呼吸器などの処置</li>
+        </ul>
+
+        <h2>免責事項</h2>
+        <p>
+          本サイトの情報は一般的な情報提供を目的としており、個別の医療アドバイスに代わるものではありません。
+          実際の医療行為・ケアの判断については、必ず医師・看護師等の専門家にご相談ください。
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>

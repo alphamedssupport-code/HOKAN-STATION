@@ -1,0 +1,34 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseURL: string;
+}
+const { currentPage, totalPages, baseURL } = Astro.props;
+const prevURL = currentPage > 1 ? (currentPage === 2 ? baseURL : `${baseURL}page/${currentPage - 1}/`) : null;
+const nextURL = currentPage < totalPages ? `${baseURL}page/${currentPage + 1}/` : null;
+---
+
+{totalPages > 1 && (
+  <nav class="flex items-center justify-center gap-3 mt-10">
+    {prevURL ? (
+      <a href={prevURL} class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-primary-50 hover:border-primary-300 transition-colors">
+        ← 前のページ
+      </a>
+    ) : (
+      <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-400 cursor-not-allowed">← 前のページ</span>
+    )}
+
+    <span class="text-sm text-gray-500">
+      {currentPage} / {totalPages}
+    </span>
+
+    {nextURL ? (
+      <a href={nextURL} class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-primary-50 hover:border-primary-300 transition-colors">
+        次のページ →
+      </a>
+    ) : (
+      <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-400 cursor-not-allowed">次のページ →</span>
+    )}
+  </nav>
+)}

@@ -1,11 +1,9 @@
 name: 毎日記事自動生成
 
 on:
-  # 毎日 AM 9:00（JST）= UTC 00:00 に実行
   schedule:
     - cron: '0 0 * * *'
 
-  # 手動実行も可能
   workflow_dispatch:
     inputs:
       count:
@@ -24,25 +22,19 @@ jobs:
       contents: write
 
     steps:
-      # 1. リポジトリをチェックアウト
       - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
+          git checkout main
 
-      # 2. Node.js のセットアップ
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
+      - name: Setup Node.js 20
+        run: |
+          node --version
+          npm --version
 
-      # 3. 依存関係のインストール
       - name: Install dependencies
         run: npm ci
 
-      # 4. 今日の日付を設定
       - name: Set publish date
         id: date
         run: |
@@ -52,26 +44,22 @@ jobs:
             echo "date=$(TZ=Asia/Tokyo date +%Y-%m-%d)" >> $GITHUB_OUTPUT
           fi
 
-      # 5. 記事を生成
       - name: Generate articles
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          COUNT=${{ github.event.inputs.count || '10' }}
-          DATE=${{ steps.date.outputs.date }}
+          COUNT="${{ github.event.inputs.count || '10' }}"
+          DATE="${{ steps.date.outputs.date }}"
           echo "📝 ${DATE} の記事を ${COUNT} 本生成します"
           node scripts/generate-articles.js --count=$COUNT --date=$DATE
 
-      # 6. 生成されたファイルを確認
       - name: Check for new articles
         id: check
         run: |
-          git status --short
           NEW_FILES=$(git status --short | grep -c "^??" || true)
           echo "new_files=$NEW_FILES" >> $GITHUB_OUTPUT
           echo "新規ファイル数: $NEW_FILES"
 
-      # 7. 新しい記事があればコミット＆プッシュ
       - name: Commit and push articles
         if: steps.check.outputs.new_files != '0'
         run: |
@@ -81,19 +69,10 @@ jobs:
           git commit -m "📝 [${{ steps.date.outputs.date }}] 訪問看護記事 ${{ github.event.inputs.count || '10' }}本を自動生成"
           git push origin main
 
-      # 8. 結果のサマリー
       - name: Summary
         if: always()
         run: |
           echo "## 🏥 HOKAN STATION 記事生成結果" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **日付**: ${{ steps.date.outputs.date }}" >> $GITHUB_STEP_SUMMARY
           echo "- **生成数**: ${{ github.event.inputs.count || '10' }} 本" >> $GITHUB_STEP_SUMMARY
           echo "- **新規ファイル**: ${{ steps.check.outputs.new_files }} 件" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.check.outputs.new_files }}" != "0" ]; then
-            echo "- **ステータス**: ✅ 記事を追加しました" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "Vercelが自動的にサイトをリビルド・デプロイします。" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- **ステータス**: ⚠️ 新規ファイルがありませんでした" >> $GITHUB_STEP_SUMMARY
-          fi

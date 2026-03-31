@@ -28,6 +28,16 @@ const formattedUpdateDate = updateDate
       day: 'numeric',
     })
   : null;
+
+const categoryColorMap: Record<string, { bg: string; text: string; border: string }> = {
+  '基礎知識':   { bg: 'bg-sky-100',     text: 'text-sky-800',     border: 'border-sky-300' },
+  '疾患別ケア': { bg: 'bg-rose-100',    text: 'text-rose-800',    border: 'border-rose-300' },
+  '家族向け':   { bg: 'bg-amber-100',   text: 'text-amber-800',   border: 'border-amber-300' },
+  '制度・保険': { bg: 'bg-violet-100',  text: 'text-violet-800',  border: 'border-violet-300' },
+  'キャリア':   { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-300' },
+  '医療技術':   { bg: 'bg-orange-100',  text: 'text-orange-800',  border: 'border-orange-300' },
+};
+const catColor = categoryColorMap[category] ?? { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-300' };
 ---
 
 <BaseLayout
@@ -40,79 +50,138 @@ const formattedUpdateDate = updateDate
 >
   <Header />
 
-  <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
-    <Breadcrumb category={category} title={title} />
+  <main class="flex-1 bg-gray-50">
+    <!-- Article Hero -->
+    <div class="bg-white border-b border-gray-100 py-8">
+      <div class="max-w-3xl mx-auto px-4 md:px-6">
+        <Breadcrumb category={category} title={title} />
 
-    <article class="bg-white rounded-xl shadow-sm p-6 md:p-10 mt-4">
-      <!-- Category Badge -->
-      <div class="mb-4">
-        <span class="inline-block bg-primary-100 text-primary-700 text-xs font-semibold px-3 py-1 rounded-full">
-          {category}
-        </span>
-      </div>
+        <div class="mt-5">
+          <!-- Category Badge -->
+          <span class={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border ${catColor.bg} ${catColor.text} ${catColor.border}`}>
+            {category}
+          </span>
 
-      <!-- Title -->
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-4">
-        {title}
-      </h1>
+          <!-- Title -->
+          <h1 class="text-xl md:text-3xl font-bold text-gray-900 leading-snug mt-3 mb-5">
+            {title}
+          </h1>
 
-      <!-- Meta Info -->
-      <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6 pb-6 border-b border-gray-100">
-        <div class="flex items-center gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <time datetime={publishDate.toISOString()}>
-            公開：{formattedPublishDate}
-          </time>
-        </div>
-        {formattedUpdateDate && (
-          <div class="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            <time datetime={updateDate?.toISOString()}>
-              更新：{formattedUpdateDate}
-            </time>
+          <!-- Description -->
+          <p class="text-gray-500 text-sm md:text-base leading-relaxed border-l-4 border-primary-300 pl-4 bg-primary-50 py-3 pr-4 rounded-r-lg">
+            {description}
+          </p>
+
+          <!-- Meta Info -->
+          <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-5 text-sm text-gray-400">
+            <div class="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <time datetime={publishDate.toISOString()}>公開：{formattedPublishDate}</time>
+            </div>
+            {formattedUpdateDate && (
+              <div class="flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <time datetime={updateDate?.toISOString()} class="text-accent-600 font-medium">更新：{formattedUpdateDate}</time>
+              </div>
+            )}
+            <div class="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+              <span>{author}</span>
+            </div>
           </div>
-        )}
-        <div class="flex items-center gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-          <span>{author}</span>
         </div>
       </div>
+    </div>
 
-      <!-- Article Body -->
-      <div class="prose prose-lg max-w-none
-        prose-headings:font-bold prose-headings:text-gray-900
-        prose-h2:text-xl prose-h2:border-l-4 prose-h2:border-primary-500 prose-h2:pl-3 prose-h2:mt-10
-        prose-h3:text-lg prose-h3:mt-6
-        prose-p:text-gray-700 prose-p:leading-relaxed
-        prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline
-        prose-ul:my-4 prose-li:my-1
-        prose-strong:text-gray-900
-        prose-blockquote:border-l-4 prose-blockquote:border-accent-500 prose-blockquote:bg-green-50 prose-blockquote:py-2 prose-blockquote:px-4
-      ">
-        <slot />
+    <!-- Article Body -->
+    <div class="max-w-3xl mx-auto px-4 md:px-6 py-8">
+
+      <!-- Notice Box -->
+      <div class="mb-8 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0 mt-0.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p>本記事は一般的な情報提供を目的としており、医療アドバイスに代わるものではありません。実際の処置・判断は医師・専門家にご相談ください。</p>
       </div>
+
+      <!-- Article Content -->
+      <article class="bg-white rounded-2xl shadow-sm border border-gray-100 px-6 py-8 md:px-10 md:py-10">
+        <div class="prose prose-base max-w-none">
+          <slot />
+        </div>
+      </article>
 
       <!-- Tags -->
       {tags.length > 0 && (
-        <div class="mt-8 pt-6 border-t border-gray-100">
-          <p class="text-sm text-gray-500 mb-2">タグ：</p>
+        <div class="mt-6 bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">関連タグ</p>
           <div class="flex flex-wrap gap-2">
             {tags.map((tag) => (
-              <span class="inline-block bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">
-                #{tag}
+              <span class="inline-flex items-center gap-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm px-3 py-1 rounded-full hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-colors cursor-default">
+                <span class="text-primary-400">#</span>{tag}
               </span>
             ))}
           </div>
         </div>
       )}
-    </article>
+
+      <!-- Author Card -->
+      <div class="mt-6 bg-gradient-to-br from-primary-700 to-primary-900 rounded-2xl p-6 text-white">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold text-base">{author}</p>
+            <p class="text-primary-200 text-sm mt-0.5">訪問看護・在宅医療の専門情報を毎日発信。看護師・ケアマネジャー・ご家族に役立つ記事をお届けします。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back to Top -->
+      <div class="mt-8 text-center">
+        <a href="/" class="inline-flex items-center gap-2 text-sm text-primary-600 hover:text-primary-800 font-medium transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          記事一覧に戻る
+        </a>
+      </div>
+    </div>
   </main>
 
   <Footer />
+
+  <!-- Back to Top Button -->
+  <button
+    id="back-to-top"
+    class="fixed bottom-6 right-6 z-50 w-11 h-11 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300"
+    aria-label="ページトップへ"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+    </svg>
+  </button>
+
+  <script>
+    const btn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        btn?.classList.remove('opacity-0', 'pointer-events-none');
+        btn?.classList.add('opacity-100');
+      } else {
+        btn?.classList.add('opacity-0', 'pointer-events-none');
+        btn?.classList.remove('opacity-100');
+      }
+    });
+    btn?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
 </BaseLayout>

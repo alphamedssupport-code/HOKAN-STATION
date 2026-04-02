@@ -1,4 +1,4 @@
-name: 毎日記事自動生成
+name: 毎日記事自動生成（1日3回）
 
 on:
   schedule:
@@ -29,10 +29,11 @@ jobs:
           git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
           git checkout main
 
-      - name: Setup Python & install anthropic
-        run: |
-          python3 --version
-          pip3 install anthropic --quiet
+      - name: Setup Python
+        run: python3 --version
+
+      - name: Install Python dependencies
+        run: pip3 install anthropic
 
       - name: Set publish date
         id: date
@@ -68,15 +69,13 @@ jobs:
           git commit -m "📝 [${{ steps.date.outputs.date }}] 訪問看護記事 ${{ github.event.inputs.count || '10' }}本を自動生成"
           git push origin main
 
-      - name: Trigger Vercel deploy
-        if: steps.check.outputs.new_files != '0'
+      - name: Trigger Vercel Deploy
+        if: steps.check.outputs.new_files != '0' && env.VERCEL_DEPLOY_HOOK_URL != ''
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
         run: |
-          if [ -n "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}" ]; then
-            curl -s -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
-            echo "✅ Vercel デプロイをトリガーしました"
-          else
-            echo "⚠️ VERCEL_DEPLOY_HOOK_URL が未設定です（スキップ）"
-          fi
+          curl -X POST "$VERCEL_DEPLOY_HOOK_URL"
+          echo "✅ Vercel デプロイをトリガーしました"
 
       - name: Summary
         if: always()

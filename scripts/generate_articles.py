@@ -305,8 +305,26 @@ def main():
         print("✅ 生成すべきトピックがありません（全て生成済み）")
         sys.exit(0)
 
+    # APIキー事前検証
+    print("🔑 APIキーを検証中...")
+    try:
+        client.messages.create(
+            model="claude-haiku-4-5",
+            max_tokens=10,
+            messages=[{"role": "user", "content": "test"}],
+        )
+        print("  ✅ APIキー有効")
+    except anthropic.AuthenticationError as e:
+        print(f"❌ APIキーが無効です: {e}", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"⚠️ API検証エラー（続行）: {e}", file=sys.stderr)
+
+    print(f"📋 利用可能トピック: {len(available_topics)} 件")
+
     # 生成実行
     generated = 0
+    errors = 0
     for i in range(count):
         cat_slug, cat_data, topic = available_topics[i]
         print(f"\n[{i+1}/{count}] 生成中: {topic}")
@@ -336,17 +354,25 @@ def main():
             if i < count - 1:
                 time.sleep(1)
 
+        except anthropic.AuthenticationError as e:
+            print(f"  ❌ 認証エラー（APIキーを確認）: {e}", file=sys.stderr)
+            sys.exit(1)
         except anthropic.APIError as e:
             print(f"  ❌ API エラー: {e}", file=sys.stderr)
             if "overloaded" in str(e).lower():
                 print("  ⏳ 過負荷のため30秒待機します...")
                 time.sleep(30)
+            errors += 1
             continue
         except Exception as e:
             print(f"  ❌ エラー: {e}", file=sys.stderr)
+            errors += 1
             continue
 
-    print(f"\n🎉 完了: {generated} 本の記事を生成しました")
+    print(f"\n🎉 完了: {generated} 本生成 / {errors} 本エラー")
+    if generated == 0 and not args.dry_run:
+        print("❌ 記事が1本も生成されませんでした", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

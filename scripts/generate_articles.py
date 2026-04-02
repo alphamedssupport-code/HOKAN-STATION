@@ -246,6 +246,7 @@ def generate_article(client: anthropic.Anthropic, title: str, category: dict, da
         messages=[{"role": "user", "content": prompt}],
     )
 
+    import re as _re
     text = message.content[0].text.strip()
     # AIがコードフェンスで囲んだ場合は除去
     if text.startswith("```markdown\n"):
@@ -254,6 +255,10 @@ def generate_article(client: anthropic.Anthropic, title: str, category: dict, da
         text = text[len("```\n"):]
     if text.endswith("```"):
         text = text[:-3].rstrip() + "\n"
+    # フロントマター(---)より前に余分なテキストがあれば除去
+    match = _re.search(r'(^---\n)', text, _re.MULTILINE)
+    if match and match.start() > 0:
+        text = text[match.start():]
     return text
 
 # ============================================================

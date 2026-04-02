@@ -1,8 +1,10 @@
-name: 毎日記事自動生成
+name: 毎日記事自動生成（1日3回）
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'   # 09:00 JST
+    - cron: '0 5 * * *'   # 14:00 JST
+    - cron: '0 11 * * *'  # 20:00 JST
 
   workflow_dispatch:
     inputs:
@@ -27,13 +29,11 @@ jobs:
           git clone "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" .
           git checkout main
 
-      - name: Setup Node.js 20
-        run: |
-          node --version
-          npm --version
+      - name: Setup Python
+        run: python3 --version
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install Python dependencies
+        run: pip3 install anthropic
 
       - name: Set publish date
         id: date
@@ -51,7 +51,7 @@ jobs:
           COUNT="${{ github.event.inputs.count || '10' }}"
           DATE="${{ steps.date.outputs.date }}"
           echo "📝 ${DATE} の記事を ${COUNT} 本生成します"
-          node scripts/generate-articles.js --count=$COUNT --date=$DATE
+          python3 scripts/generate_articles.py --count=$COUNT --date=$DATE
 
       - name: Check for new articles
         id: check
@@ -68,6 +68,14 @@ jobs:
           git add src/content/blog/
           git commit -m "📝 [${{ steps.date.outputs.date }}] 訪問看護記事 ${{ github.event.inputs.count || '10' }}本を自動生成"
           git push origin main
+
+      - name: Trigger Vercel Deploy
+        if: steps.check.outputs.new_files != '0' && env.VERCEL_DEPLOY_HOOK_URL != ''
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          curl -X POST "$VERCEL_DEPLOY_HOOK_URL"
+          echo "✅ Vercel デプロイをトリガーしました"
 
       - name: Summary
         if: always()

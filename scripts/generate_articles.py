@@ -246,7 +246,15 @@ def generate_article(client: anthropic.Anthropic, title: str, category: dict, da
         messages=[{"role": "user", "content": prompt}],
     )
 
-    return message.content[0].text
+    text = message.content[0].text.strip()
+    # AIがコードフェンスで囲んだ場合は除去
+    if text.startswith("```markdown\n"):
+        text = text[len("```markdown\n"):]
+    elif text.startswith("```\n"):
+        text = text[len("```\n"):]
+    if text.endswith("```"):
+        text = text[:-3].rstrip() + "\n"
+    return text
 
 # ============================================================
 # メイン
